@@ -1,6 +1,6 @@
 # scoreboardv2
-
-# User Stories
+----
+## User Stories
 
 As a connie player I want to
 
@@ -13,7 +13,7 @@ By
 > Showing peoples current scores at the top of the page for easy reference
 
 > Mobile first?
-
+----
 ## Client Journey
 
 **Page 1**
@@ -32,3 +32,21 @@ Show results, have a next round button, go back to page 2
 
 **Page 5**
 At game end, show final scores, highlight winner
+
+----
+## How?
+
+Have a database with tables - 1 for players, 1 for each round:
+  - Players: id, name, score, dealer (true or false)
+  - rounds: id, round id, player id, tricks bid, tricks made
+ 
+After getting players names, initialize that database, with one player being dealer
+
+Have a query to get the third three columns from that database, display these as a partial on all pages
+
+Start on 10D (round id's will be number of tricks + D for down or U for up)
+
+Get bids, insert into rounds table
+Get tricks, insert into rounds table
+In player table, scores +=tricks
+Have a checker for that round, if bids==tricks, in player table, scores +=10
