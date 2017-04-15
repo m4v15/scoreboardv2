@@ -1,0 +1,12 @@
+{
+    "extends": "airbnb-base",
+    "plugins": [
+        "import"
+    ],
+    "rules": {
+      "comma-dangle": ["error","never"]
+    },
+    "parserOptions": {
+        "ecmaVersion": 6
+    }
+}
