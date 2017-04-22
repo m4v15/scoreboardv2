@@ -1,4 +1,5 @@
 // access forms from the page
+var playerName = document.getElementById('playerName')
 var currentScores = document.getElementById('currentScores')
 var playerForm = document.getElementById('players');
 
@@ -6,7 +7,6 @@ var bids = document.getElementById('bids')
 var tricks = document.getElementById('tricks')
 
 var roundChecker = document.getElementById('round');
-console.log(roundChecker.innerHTML);
 
 var roundNum = 10;
 var down = true;
@@ -54,12 +54,8 @@ var renderPlayers = function(player) {
 
   var liEl = document.createElement('li');
   var name = document.createElement('h2');
-  var score = document.createElement('h3');
-  var bid = document.createElement('h3');
 
   name.innerHTML = player.name;
-  score.innerHTML = player.score;
-  bid.innerHTML = 'Current bid: '+player.bid;
 
   if (player.dealer) {
     liEl.className = 'player dealer';
@@ -67,27 +63,31 @@ var renderPlayers = function(player) {
     liEl.className = 'player';
   }
 
-  liEl.appendChild(name).appendChild(score).appendChild(bid)
+  liEl.appendChild(name)
+  playerName.appendChild(liEl);
+}
+
+var renderBids = function (player) {
+  var liEl = document.createElement('li')
+  var round = document.createElement('h2')
+  var bid = document.createElement('h3');
+  round.innerHTML = 'Round: '+roundNum;
+  bid.innerHTML = 'Bid: '+player.bid;
+  liEl.appendChild(round).appendChild(bid)
   currentScores.appendChild(liEl);
 }
 
-
-//for an array of players, loop through and replace currentScores of each player
-var replacePlayers = function(players) {
-  currentScores.innerHTML='';
-  players.forEach(function(player){
-    renderPlayers(player);
-  })
-  roundChecker.innerHTML = roundNum;
+var renderScores = function (player) {
+  var liEl = document.createElement('li');
+  liEl.setAttribute('class', 'roundScore');
+  var score = document.createElement('h3');
+  score.innerHTML = 'Score: '+player.score;
+  liEl.appendChild(score);
+  currentScores.appendChild(liEl);
 }
 
 //render the inputs for bids/scores
 var renderEmptyInputs = function(players) {
-
-  // console.log('Html of form:', form.innerHTML);
-  //empty the form
-  bids.innerHTML='';
-  // console.log('Html of form:', form.innerHTML);
 
   //for each player, create a list element holder the players name and an input box for them, changing what we ask for depending on inputType variable
   players.forEach((player, index)=>{
@@ -111,8 +111,8 @@ var renderEmptyInputs = function(players) {
     trickIpBox.setAttribute('id', 'trick');
 
     //access the name to personalise the name header
-    bidName.innerHTML = player.name+'\'s bid:'
-    trickName.innerHTML = 'Number of tricks '+player.name+' won:'
+    bidName.innerHTML = 'Bid:'
+    trickName.innerHTML = 'Won:'
 
     bidLiEl.appendChild(bidName).appendChild(bidIpBox);
     trickLiEl.appendChild(trickName).appendChild(trickIpBox);
@@ -143,20 +143,17 @@ var renderEmptyInputs = function(players) {
 var bidListener = function (players) {
   return function(event){
     event.preventDefault();
-    console.log('bidding');
     //get the values from the form
     var formData = document.querySelectorAll('#bid');
 
     //loop through the players array and add their bid to the objects
     players.forEach(function(player, index){
       player.bid = formData[index].valueAsNumber;
+      renderBids(player);
     })
-    //rerender the players
-    replacePlayers(players);
+
     bids.style.display = 'none';
     tricks.style.display = 'inline';
-
-//    renderEmptyInputs(players, inputs, 'trick', trickListener);
   }
 }
 
@@ -172,6 +169,7 @@ var trickListener = function (players) {
       player.score += 10 + formData[index].valueAsNumber :
       player.score += formData[index].valueAsNumber;
       player.bid = null;
+      renderScores(player);
     })
     if (down && roundNum === 1){
       down = false;
@@ -180,11 +178,8 @@ var trickListener = function (players) {
     } else {
       roundNum +=1
     }
-    replacePlayers(players)
-
     tricks.style.display = 'none';
     bids.style.display = 'inline';
-
+    roundChecker.innerHTML = roundNum;
   }
-
 }

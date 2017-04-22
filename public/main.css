@@ -81,6 +81,15 @@ form {
   border: 1px solid red;
 }
 
-.currentScores {
-  width: 100%;
+.currentScores li {
+  text-align: center;
+  width: 20%;
+  display: inline-block;
+  box-sizing: border-box;
+}
+
+.roundScore {
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+  border-bottom: 2px dashed black;
 }
